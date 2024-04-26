@@ -1,0 +1,33 @@
+const express = require('express')
+const pm2 = require('pm2')
+const model_pm2 = require('./model_pm2')
+
+
+/**
+ * 
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ */
+module.exports = async function (req, res) {
+    /**
+     * @type {model_pm2[]}
+     */
+    let list = await new Promise((resolve, reject) => {
+        pm2.list((err, list) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(list)
+            }
+        })
+    })
+
+    list = list.map(x => ({
+        "name": x.name,
+        "pid": x.pm_id,
+        "status": x.pm2_env.status,
+    }))
+
+
+    res.json(list)
+}
