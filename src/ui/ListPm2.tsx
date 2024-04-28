@@ -1,14 +1,17 @@
 'use client'
 
-import { ActionIcon, Box, Divider, Flex, Paper, Skeleton, Stack, Table, Text, Title } from "@mantine/core";
+import { ActionIcon, Box, Code, Divider, Flex, Paper, Skeleton, Stack, Table, Text, Title } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
-import { MdLogoDev, MdRestartAlt, MdStop } from 'react-icons/md'
+import { MdClose, MdLogoDev, MdRestartAlt, MdStop } from 'react-icons/md'
 import _ from "lodash";
 import { Loader } from "./component/Loader";
 
 export function ListPm2() {
     const [listPm2, setlistPm2] = useState<any[] | null>(null)
+    const [openLog, setOpenLog] = useState(false)
+    const [textLog, setTextLog] = useState<string>("")
+    const [loading, setLoading] = useState(false)
 
     useShallowEffect(() => {
         loadList()
@@ -17,6 +20,44 @@ export function ListPm2() {
         const list = await fetch('/bin/list-pm2').then(res => res.json())
         setlistPm2(list)
     }
+
+    const onRestart = async (id: string) => {
+        setLoading(true)
+        const res = await fetch(`/bin/pm2-restart?id=${id}`).then(res => res.json())
+        console.log(res)
+        loadList()
+        setLoading(false)
+    }
+
+    const onStop = async (id: string) => {
+        setLoading(true)
+        const res = await fetch(`/bin/pm2-stop?id=${id}`).then(res => res.json())
+        console.log(res)
+        loadList()
+        setLoading(false)
+    }
+
+    const onLog = async (id: string) => {
+        setTextLog("")
+        setOpenLog(true)
+        const res: any = await fetch(`/bin/pm2-log?id=${id}`)
+        
+        // get response stream
+        const reader = res.body.getReader()
+
+        // read stream
+        let result = ""
+        while (true) {
+            const { done, value } = await reader.read()
+            if (done) break
+            result += new TextDecoder().decode(value)
+            setTextLog(result)
+        }
+
+    }
+
+    if (openLog) return <PM2Log text={textLog} setOpen={setOpenLog} />
+
     return (
         <Stack p={"md"}>
             <Title>ListPm2</Title>
@@ -41,13 +82,13 @@ export function ListPm2() {
                                     <Table.Td bg={x.status === "online" ? "green" : "red"} c={"white"}>{x.status}</Table.Td>
                                     <Table.Td>
                                         <Flex gap={"md"}>
-                                            <ActionIcon>
+                                            <ActionIcon loading={loading} onClick={() => onRestart(x.id)}>
                                                 <MdRestartAlt />
                                             </ActionIcon>
-                                            <ActionIcon>
+                                            <ActionIcon loading={loading} onClick={() => onStop(x.id)}>
                                                 <MdStop />
                                             </ActionIcon>
-                                            <ActionIcon>
+                                            <ActionIcon loading={loading} onClick={() => onLog(x.id)}>
                                                 <MdLogoDev />
                                             </ActionIcon>
                                         </Flex>
@@ -62,4 +103,29 @@ export function ListPm2() {
 
         </Stack>
     );
+}
+
+const PM2Log = ({ text, setOpen }: { text: string, setOpen: any }) => {
+
+    return <Stack p={"md"}>
+        <Paper shadow="sm" bg={"black"}>
+            <Stack gap={0}  >
+                <Flex bg={"dark"} justify={"space-between"} p={"sm"} c={"white"}>
+                    <Text>LOG</Text>
+                    <ActionIcon onClick={() => setOpen(false)}>
+                        <MdClose />
+                    </ActionIcon>
+                </Flex>
+                <Stack h={500} p={"sm"} pos={"static"} style={{ overflow: "auto" }} c={"green"}>
+                    <Code c={"green"} bg={"black"}>
+                        <pre>
+                            {text}
+                        </pre>
+                    </Code>
+                </Stack>
+            </Stack>
+        </Paper>
+    </Stack>
+
+
 }
