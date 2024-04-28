@@ -23,7 +23,7 @@ export function ListPm2() {
             <Stack pos={"relative"}>
                 <Flex wrap={"wrap"} gap={"md"}>
                     {listPm2?.map((x, i) => (
-                        <Paper shadow="sm" key={i} p={"md"} bg={x.status === "online" ? "green" : "red"} c={"white"}>
+                        <Paper w={300} shadow="sm" key={i} p={"md"} bg={x.status === "online" ? "green" : "red"} c={"white"}>
                             <Stack key={i} gap={0}>
                                 <Flex>
                                     <Text w={100}>Id  </Text>
