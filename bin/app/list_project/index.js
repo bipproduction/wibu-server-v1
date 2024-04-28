@@ -1,6 +1,7 @@
 const fs = require("fs")
 const path = require("path")
 const root_path = process.cwd()
+const _ = require("lodash")
 
 module.exports = async function (req, res) {
     let list_data = []
@@ -10,7 +11,7 @@ module.exports = async function (req, res) {
         try {
             const name = l
             const type = JSON.parse(await fs.promises.readFile(path.join(root_path, "../", l, "package.json"), "utf-8")).dependencies.express ? "express" : "nextjs"
-            console.log(name, type)
+            // console.log(name, type)
             const data = {
                 name,
                 type
@@ -28,6 +29,6 @@ module.exports = async function (req, res) {
         }
 
     }
-
+    list_data = _.orderBy(list_data, ["type"], ["asc"])
     res.json(list_data)
 }
