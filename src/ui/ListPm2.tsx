@@ -46,7 +46,7 @@ export function ListPm2() {
     }
 
     const onLog = async (id: string) => {
-        setTextLog("")
+        setTextLog("loading ...")
         setOpenLog(true)
         const res: any = await fetch(`/bin/pm2-log?id=${id}`)
 
