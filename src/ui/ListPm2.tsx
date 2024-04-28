@@ -26,6 +26,7 @@ export function ListPm2() {
                         <Table.Tr>
                             <Table.Th>ID</Table.Th>
                             <Table.Th>NAME</Table.Th>
+                            <Table.Th>PORT</Table.Th>
                             <Table.Th>STATUS</Table.Th>
                             <Table.Th>ACTION</Table.Th>
                         </Table.Tr>
@@ -36,6 +37,7 @@ export function ListPm2() {
                                 <Table.Tr key={i} >
                                     <Table.Td>{x.id}</Table.Td>
                                     <Table.Td>{x.name}</Table.Td>
+                                    <Table.Td>{x.port}</Table.Td>
                                     <Table.Td bg={x.status === "online" ? "green" : "red"} c={"white"}>{x.status}</Table.Td>
                                     <Table.Td>
                                         <Flex gap={"md"}>
