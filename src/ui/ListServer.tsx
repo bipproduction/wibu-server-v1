@@ -22,22 +22,26 @@ export function ListServer() {
             <Table striped withColumnBorders withRowBorders withTableBorder>
                 <Table.Thead>
                     <Table.Tr>
+                        <Table.Th>ID</Table.Th>
                         <Table.Th>NAME</Table.Th>
-                        <Table.Th>STATUS</Table.Th>
+                        <Table.Th>PORT</Table.Th>
+                        <Table.Th>SERVER NAME</Table.Th>
                     </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
                     {
                         listServer?.map((x, i) => (
                             <Table.Tr key={i} >
+                                <Table.Td>{x.id}</Table.Td>
                                 <Table.Td>{x.name}</Table.Td>
-                                <Table.Td>{x.status}</Table.Td>
+                                <Table.Td>{x.port}</Table.Td>
+                                <Table.Td>{x.server_name}</Table.Td>
                             </Table.Tr>
                         ))
                     }
                 </Table.Tbody>
             </Table>
-            
+
             <Stack pos={"relative"}>
                 <Skeleton visible={listServer === null} >
                     <pre>{JSON.stringify(listServer, null, 2)}</pre>
