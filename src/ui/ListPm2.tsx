@@ -3,7 +3,7 @@
 import { ActionIcon, Box, Code, Divider, Flex, Paper, Skeleton, Stack, Table, Text, Title } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
-import { MdClose, MdLogoDev, MdRestartAlt, MdStop } from 'react-icons/md'
+import { MdClose, MdDelete, MdLogoDev, MdRemove, MdRestartAlt, MdStop } from 'react-icons/md'
 import _ from "lodash";
 import { Loader } from "./component/Loader";
 
@@ -37,11 +37,19 @@ export function ListPm2() {
         setLoading(false)
     }
 
+    const onDelete = async (id: string) => {
+        setLoading(true)
+        const res = await fetch(`/bin/pm2-delete?id=${id}`).then(res => res.json())
+        console.log(res)
+        loadList()
+        setLoading(false)
+    }
+
     const onLog = async (id: string) => {
         setTextLog("")
         setOpenLog(true)
         const res: any = await fetch(`/bin/pm2-log?id=${id}`)
-        
+
         // get response stream
         const reader = res.body.getReader()
 
@@ -85,9 +93,12 @@ export function ListPm2() {
                                             <ActionIcon loading={loading} onClick={() => onRestart(x.id)}>
                                                 <MdRestartAlt />
                                             </ActionIcon>
-                                            <ActionIcon loading={loading} onClick={() => onStop(x.id)}>
+                                            {x.status === "online" && <ActionIcon loading={loading} onClick={() => onStop(x.id)}>
                                                 <MdStop />
-                                            </ActionIcon>
+                                            </ActionIcon>}
+                                            {x.status === "stopped" && <ActionIcon loading={loading} onClick={() => onDelete(x.id)}>
+                                                <MdDelete />
+                                            </ActionIcon>}
                                             <ActionIcon loading={loading} onClick={() => onLog(x.id)}>
                                                 <MdLogoDev />
                                             </ActionIcon>
