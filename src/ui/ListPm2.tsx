@@ -20,7 +20,7 @@ export function ListPm2() {
             <h1>ListPm2</h1>
             <Stack pos={"relative"}>
 
-                <Skeleton  visible={listPm2 === null} >
+                <Skeleton visible={listPm2 === null} >
                     <pre>
                         {JSON.stringify(listPm2, null, 2)}
                     </pre>
