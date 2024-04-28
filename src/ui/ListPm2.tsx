@@ -1,11 +1,12 @@
 'use client'
 
-import { ActionIcon, Box, Code, Divider, Flex, Paper, Skeleton, Stack, Table, Text, Title } from "@mantine/core";
+import { ActionIcon, ActionIconGroup, Box, Code, Divider, Flex, Paper, Skeleton, Stack, Table, Text, Title, Tooltip } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import { MdClose, MdDelete, MdLogoDev, MdRemove, MdRestartAlt, MdStop } from 'react-icons/md'
 import _ from "lodash";
 import { Loader } from "./component/Loader";
+import LogView from "./component/LogView";
 
 export function ListPm2() {
     const [listPm2, setlistPm2] = useState<any[] | null>(null)
@@ -64,7 +65,7 @@ export function ListPm2() {
 
     }
 
-    if (openLog) return <PM2Log text={textLog} setOpen={setOpenLog} />
+    if (openLog) return <LogView text={textLog} setOpen={setOpenLog} />
 
     return (
         <Stack p={"md"}>
@@ -89,20 +90,28 @@ export function ListPm2() {
                                     <Table.Td>{x.port}</Table.Td>
                                     <Table.Td bg={x.status === "online" ? "green" : "red"} c={"white"}>{x.status}</Table.Td>
                                     <Table.Td>
-                                        <Flex gap={"md"}>
-                                            <ActionIcon loading={loading} onClick={() => onRestart(x.id)}>
-                                                <MdRestartAlt />
-                                            </ActionIcon>
-                                            {x.status === "online" && <ActionIcon loading={loading} onClick={() => onStop(x.id)}>
-                                                <MdStop />
-                                            </ActionIcon>}
-                                            {x.status === "stopped" && <ActionIcon loading={loading} onClick={() => onDelete(x.id)}>
-                                                <MdDelete />
-                                            </ActionIcon>}
-                                            <ActionIcon loading={loading} onClick={() => onLog(x.id)}>
-                                                <MdLogoDev />
-                                            </ActionIcon>
-                                        </Flex>
+                                        <ActionIconGroup>
+                                            <Tooltip label="Restart">
+                                                <ActionIcon loading={loading} onClick={() => onRestart(x.id)} >
+                                                    <MdRestartAlt />
+                                                </ActionIcon>
+                                            </Tooltip>
+                                            {x.status === "online" && <Tooltip label="Stop">
+                                                <ActionIcon loading={loading} onClick={() => onStop(x.id)}>
+                                                    <MdStop />
+                                                </ActionIcon>
+                                            </Tooltip>}
+                                            {x.status === "stopped" && <Tooltip label="Delete">
+                                                <ActionIcon loading={loading} onClick={() => onDelete(x.id)}>
+                                                    <MdDelete />
+                                                </ActionIcon>
+                                            </Tooltip>}
+                                            <Tooltip label="Log">
+                                                <ActionIcon loading={loading} onClick={() => onLog(x.id)}>
+                                                    <MdLogoDev />
+                                                </ActionIcon>
+                                            </Tooltip>
+                                        </ActionIconGroup>
                                     </Table.Td>
                                 </Table.Tr>
                             ))
@@ -116,27 +125,3 @@ export function ListPm2() {
     );
 }
 
-const PM2Log = ({ text, setOpen }: { text: string, setOpen: any }) => {
-
-    return <Stack p={"md"}>
-        <Paper shadow="sm" bg={"black"}>
-            <Stack gap={0}  >
-                <Flex bg={"dark"} justify={"space-between"} p={"sm"} c={"white"}>
-                    <Text>LOG</Text>
-                    <ActionIcon onClick={() => setOpen(false)}>
-                        <MdClose />
-                    </ActionIcon>
-                </Flex>
-                <Stack h={500} p={"sm"} pos={"static"} style={{ overflow: "auto" }} c={"green"}>
-                    <Code c={"green"} bg={"black"}>
-                        <pre>
-                            {text}
-                        </pre>
-                    </Code>
-                </Stack>
-            </Stack>
-        </Paper>
-    </Stack>
-
-
-}

@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, LoadingOverlay, Skeleton, Stack, Table, Title } from "@mantine/core";
+import { ActionIcon, Box, Button, Flex, LoadingOverlay, Skeleton, Stack, Table, Title } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import { Loader } from "./component/Loader";
@@ -24,6 +24,7 @@ export function ListProject() {
                         <Table.Tr>
                             <Table.Th>NAME</Table.Th>
                             <Table.Th>TYPE</Table.Th>
+                            <Table.Th>ACTION</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>
@@ -32,6 +33,14 @@ export function ListProject() {
                                 <Table.Tr key={i} >
                                     <Table.Td>{x.name}</Table.Td>
                                     <Table.Td>{x.type}</Table.Td>
+                                    <Table.Td>
+                                        <Button.Group>
+                                            {x.type === "nextjs" ?
+                                                <Button >BUILD</Button>
+                                                : x.type === null ? null : <Button >INSTALL</Button>}
+                                            <Button variant="outline" c={"red"}>DELETE</Button>
+                                        </Button.Group>
+                                    </Table.Td>
                                 </Table.Tr>
 
                             ))
