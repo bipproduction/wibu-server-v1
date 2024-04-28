@@ -18,7 +18,8 @@ module.exports = async function (req, res) {
 
             list_data.push(data)
         } catch (error) {
-            console.log(error)
+            list_data[list_data.length - 1].type = null
+            // console.log(error)
         }
 
     }

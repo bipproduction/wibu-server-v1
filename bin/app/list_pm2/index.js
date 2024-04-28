@@ -23,7 +23,9 @@ module.exports = async function (req, res) {
     })
 
     list = list.map(x => ({
-        "name": x.name,
+        "id": x.name,
+        "name": x.name.split("_")[0],
+        "port": x.name.split("_")[1],
         "pid": x.pm_id,
         "status": x.pm2_env.status,
     }))

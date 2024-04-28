@@ -13,6 +13,7 @@ module.exports = async function (req, res) {
 
         for (let l of list) {
             const data = {}
+            data.id = l
             data.name = l.split("_")[0]
             data.port = Number(l.split("_")[1])
             try {
