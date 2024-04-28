@@ -30,7 +30,8 @@ module.exports = async function (req, res) {
             list_data.push(data)
         }
 
-        list = _.orderBy(list_data, ["port"], ["asc"])
+        list_data = _.orderBy(list_data, ["port"], ["asc"])
+        list_data = list_data.filter(x => x.name !== "default")
         return res.json(list_data)
     } catch (error) {
         return res.json([])
