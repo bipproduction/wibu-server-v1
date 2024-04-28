@@ -18,7 +18,12 @@ module.exports = async function (req, res) {
 
             list_data.push(data)
         } catch (error) {
-            list_data[list_data.length - 1].type = null
+            const data = {
+                name: l,
+                type: null
+            }
+
+            list_data.push(data)
             // console.log(error)
         }
 
