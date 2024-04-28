@@ -1,7 +1,7 @@
 const express = require('express')
 const pm2 = require('pm2')
 const model_pm2 = require('./model_pm2')
-
+const _ = require("lodash")
 
 /**
  * 
@@ -30,6 +30,6 @@ module.exports = async function (req, res) {
         "status": x.pm2_env.status,
     }))
 
-
+    list = _.orderBy(list, ["status"], ["desc"])
     res.json(list)
 }
