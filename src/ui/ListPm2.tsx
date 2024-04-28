@@ -1,10 +1,11 @@
 'use client'
 
-import { ActionIcon, Box, Divider, Flex, LoadingOverlay, Paper, Skeleton, Stack, Text } from "@mantine/core";
+import { ActionIcon, Box, Divider, Flex, Paper, Skeleton, Stack, Text, Title } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import { MdLogoDev, MdRestartAlt, MdStop } from 'react-icons/md'
 import _ from "lodash";
+import { Loader } from "./component/Loader";
 
 export function ListPm2() {
     const [listPm2, setlistPm2] = useState<any[] | null>(null)
@@ -17,54 +18,48 @@ export function ListPm2() {
         setlistPm2(list)
     }
     return (
-        <div>
-            <h1>ListPm2</h1>
+        <Stack>
+            <Title>ListPm2</Title>
             <Stack pos={"relative"}>
-
-                <Box p={"md"}>
-                    <Skeleton visible={listPm2 === null}  h={200}>
-                        <Flex wrap={"wrap"} gap={"md"}>
-                            {listPm2?.map((x, i) => (
-                                <Paper shadow="sm" key={i} p={"md"} bg={x.status === "online" ? "green" : "red"} c={"white"}>
-                                    <Stack key={i} gap={0}>
-                                        <Flex>
-                                            <Text w={100}>Id  </Text>
-                                            <Text >: {x.id}</Text>
-                                        </Flex>
-                                        <Flex>
-                                            <Text w={100}>Name </Text>
-                                            <Text >: {x.name}</Text>
-                                        </Flex>
-                                        <Flex>
-                                            <Text w={100}>Port </Text>
-                                            <Text >: {x.port}</Text>
-                                        </Flex>
-                                        <Flex>
-                                            <Text w={100}>Status </Text>
-                                            <Text >: {x.status}</Text>
-                                        </Flex>
-                                        <Divider mt={"md"} />
-                                        <Flex gap={"sm"} pt={"md"} >
-                                            <ActionIcon>
-                                                <MdRestartAlt />
-                                            </ActionIcon>
-                                            <ActionIcon>
-                                                <MdStop />
-                                            </ActionIcon>
-                                            <ActionIcon>
-                                                <MdLogoDev />
-                                            </ActionIcon>
-                                        </Flex>
-                                    </Stack>
-                                </Paper>
-                            ))}
-                        </Flex>
-                        {/* <pre>
-                            {JSON.stringify(listPm2, null, 2)}
-                        </pre> */}
-                    </Skeleton>
-                </Box>
+                <Flex wrap={"wrap"} gap={"md"}>
+                    {listPm2?.map((x, i) => (
+                        <Paper shadow="sm" key={i} p={"md"} bg={x.status === "online" ? "green" : "red"} c={"white"}>
+                            <Stack key={i} gap={0}>
+                                <Flex>
+                                    <Text w={100}>Id  </Text>
+                                    <Text >: {x.id}</Text>
+                                </Flex>
+                                <Flex>
+                                    <Text w={100}>Name </Text>
+                                    <Text >: {x.name}</Text>
+                                </Flex>
+                                <Flex>
+                                    <Text w={100}>Port </Text>
+                                    <Text >: {x.port}</Text>
+                                </Flex>
+                                <Flex>
+                                    <Text w={100}>Status </Text>
+                                    <Text >: {x.status}</Text>
+                                </Flex>
+                                <Divider mt={"md"} />
+                                <Flex gap={"sm"} pt={"md"} >
+                                    <ActionIcon>
+                                        <MdRestartAlt />
+                                    </ActionIcon>
+                                    <ActionIcon>
+                                        <MdStop />
+                                    </ActionIcon>
+                                    <ActionIcon>
+                                        <MdLogoDev />
+                                    </ActionIcon>
+                                </Flex>
+                            </Stack>
+                        </Paper>
+                    ))}
+                </Flex>
+                <Loader visible={listPm2 === null} />
             </Stack>
-        </div>
+
+        </Stack>
     );
 }
