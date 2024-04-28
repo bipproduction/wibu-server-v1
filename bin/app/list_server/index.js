@@ -20,7 +20,7 @@ module.exports = async function (req, res) {
                 const host = await fs.promises.readFile(`/etc/nginx/sites-enabled/${l}`, "utf-8")
                 const regex = /server_name\s+([^;]+);/g;
                 const matches = [...host.matchAll(regex)];
-                const serverNames = matches.map(match => match[1].trim());
+                const serverNames = matches.map(match => match[1].trim())[0];
                 data.server_name = serverNames
             } catch (error) {
                 console.log(error)
