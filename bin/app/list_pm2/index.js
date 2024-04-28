@@ -30,6 +30,6 @@ module.exports = async function (req, res) {
         "status": x.pm2_env.status,
     }))
 
-    list = _.orderBy(list, ["status"], ["desc"])
+    list = _.orderBy(list, ["status"], ["asc"])
     res.json(list)
 }
