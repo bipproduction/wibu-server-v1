@@ -4,16 +4,42 @@ import { ActionIcon, Box, Button, Flex, LoadingOverlay, Skeleton, Stack, Table, 
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import { Loader } from "./component/Loader";
+import LogView from "./component/LogView";
 
 export function ListProject() {
     const [listProject, setlistProject] = useState<any[] | null>(null)
+    const [openLog, setOpenLog] = useState(false)
+    const [textLog, setTextLog] = useState<string>("")
+    const [loading, setLoading] = useState(false)
 
     useShallowEffect(() => {
-        loadData()
+        loadList()
     }, [])
-    const loadData = async () => {
+    const loadList = async () => {
         const res = await fetch('/bin/list-project').then(res => res.json())
         setlistProject(res)
+    }
+
+    const onBuild = async (id: string) => {
+        setOpenLog(true)
+        setLoading(true)
+        // const res = await fetch(`/bin/nextjs-build?id=${id}`).then(res => res.json())
+        // console.log(res)
+        loadList()
+        setLoading(false)
+    }
+
+    const onInstall = async (id: string) => {
+        setOpenLog(true)
+        setLoading(true)
+        // const res = await fetch(`/bin/nextjs-install?id=${id}`).then(res => res.json())
+        // console.log(res)
+        loadList()
+        setLoading(false)
+    }
+
+    if (openLog) {
+        return <LogView text={textLog} setOpen={setOpenLog} />
     }
     return (
         <Stack p={"md"} gap={"md"}>
@@ -36,8 +62,8 @@ export function ListProject() {
                                     <Table.Td>
                                         <Button.Group>
                                             {x.type === "nextjs" ?
-                                                <Button >BUILD</Button>
-                                                : x.type === null ? null : <Button >INSTALL</Button>}
+                                                <Button onClick={() => onBuild(x.id)} >BUILD</Button>
+                                                : x.type === null ? null : <Button onClick={() => onInstall(x.id)} >INSTALL</Button>}
                                             <Button variant="outline" c={"red"}>DELETE</Button>
                                         </Button.Group>
                                     </Table.Td>
