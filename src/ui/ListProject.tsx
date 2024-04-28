@@ -38,9 +38,7 @@ export function ListProject() {
                         }
                     </Table.Tbody>
                 </Table>
-                <Skeleton visible={listProject === null} >
-                    <pre>{JSON.stringify(listProject, null, 2)}</pre>
-                </Skeleton>
+                <Skeleton visible={listProject === null} h={"md"} ></Skeleton>
             </Stack>
         </Stack>
     );

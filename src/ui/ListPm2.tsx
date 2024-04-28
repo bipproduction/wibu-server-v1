@@ -57,7 +57,7 @@ export function ListPm2() {
                         }
                     </Table.Tbody>
                 </Table>
-                <Loader visible={listPm2 === null} />
+                <Skeleton visible={listPm2 === null} h={"md"} ></Skeleton>
             </Stack>
 
         </Stack>
