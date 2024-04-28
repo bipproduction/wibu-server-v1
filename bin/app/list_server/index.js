@@ -2,6 +2,7 @@ const fs = require("fs")
 const _ = require("lodash")
 
 module.exports = async function (req, res) {
+    let list_data = []
     try {
         let list = await fs.promises.readdir("/etc/nginx/sites-enabled")
         // list = list.filter(x => x !== "default").map(async (x) => ({
@@ -11,17 +12,20 @@ module.exports = async function (req, res) {
         // }))
 
         for (let l of list) {
-            l.name = l.split("_")[0]
-            l.port = Number(l.split("_")[1])
+            const data = {}
+            data.name = l.split("_")[0]
+            data.port = Number(l.split("_")[1])
             try {
-                l.host = await fs.promises.readFile(`/etc/nginx/sites-enabled/${l}`, "utf-8")
+                data.host = await fs.promises.readFile(`/etc/nginx/sites-enabled/${l}`, "utf-8")
             } catch (error) {
                 console.log(error)
             }
+
+            list_data.push(data)
         }
 
-        list = _.orderBy(list, ["port"], ["asc"])
-        return res.json(list)
+        list = _.orderBy(list_data, ["port"], ["asc"])
+        return res.json(list_data)
     } catch (error) {
         return res.json([])
     }
