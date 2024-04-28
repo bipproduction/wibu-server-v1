@@ -3,11 +3,21 @@ const path = require("path")
 const root_path = process.cwd()
 
 module.exports = async function (req, res) {
-    let list = await fs.promises.readdir(path.join(root_path, "../"))
+    let list_data = []
+    let list = (await fs.promises.readdir(path.join(root_path, "../"))).filter(x => x !== ".DS_Store")
 
-    list = list.map(async (x) => ({
-        name: x,
-        type: (await fs.promises.readFile(path.join(root_path, "../", x, "package.json"), { encoding: "utf8" }).then(x => JSON.parse(x).scripts.dev)) ? "nextjs" : "express",
-    }))
-    res.json(list.filter(x => x !== ".DS_Store"))
+    for (let l of list) {
+        const name = l
+        const type = JSON.parse(fs.readFileSync(path.join(root_path, "../", l, "package.json"), "utf-8")).dependencies.express
+
+        const data = {
+            name,
+            type
+        }
+
+        list_data.push(data)
+
+    }
+
+    res.json(list_data)
 }
