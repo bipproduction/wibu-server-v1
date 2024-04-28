@@ -1,6 +1,6 @@
 'use client'
 
-import { ActionIcon, Box, Divider, Flex, Paper, Skeleton, Stack, Text, Title } from "@mantine/core";
+import { ActionIcon, Box, Divider, Flex, Paper, Skeleton, Stack, Table, Text, Title } from "@mantine/core";
 import { useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import { MdLogoDev, MdRestartAlt, MdStop } from 'react-icons/md'
@@ -18,45 +18,43 @@ export function ListPm2() {
         setlistPm2(list)
     }
     return (
-        <Stack>
+        <Stack p={"md"}>
             <Title>ListPm2</Title>
             <Stack pos={"relative"}>
-                <Flex wrap={"wrap"} gap={"md"}>
-                    {listPm2?.map((x, i) => (
-                        <Paper w={300} shadow="sm" key={i} p={"md"} bg={x.status === "online" ? "green" : "red"} c={"white"}>
-                            <Stack key={i} gap={0}>
-                                <Flex>
-                                    <Text w={100}>Id  </Text>
-                                    <Text >: {x.id}</Text>
-                                </Flex>
-                                <Flex>
-                                    <Text w={100}>Name </Text>
-                                    <Text >: {x.name}</Text>
-                                </Flex>
-                                <Flex>
-                                    <Text w={100}>Port </Text>
-                                    <Text >: {x.port}</Text>
-                                </Flex>
-                                <Flex>
-                                    <Text w={100}>Status </Text>
-                                    <Text >: {x.status}</Text>
-                                </Flex>
-                                <Divider mt={"md"} />
-                                <Flex gap={"sm"} pt={"md"} >
-                                    <ActionIcon>
-                                        <MdRestartAlt />
-                                    </ActionIcon>
-                                    <ActionIcon>
-                                        <MdStop />
-                                    </ActionIcon>
-                                    <ActionIcon>
-                                        <MdLogoDev />
-                                    </ActionIcon>
-                                </Flex>
-                            </Stack>
-                        </Paper>
-                    ))}
-                </Flex>
+                <Table striped withColumnBorders withRowBorders withTableBorder>
+                    <Table.Thead>
+                        <Table.Tr>
+                            <Table.Th>ID</Table.Th>
+                            <Table.Th>NAME</Table.Th>
+                            <Table.Th>STATUS</Table.Th>
+                            <Table.Th>ACTION</Table.Th>
+                        </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>
+                        {
+                            listPm2?.map((x, i) => (
+                                <Table.Tr key={i} >
+                                    <Table.Td>{x.id}</Table.Td>
+                                    <Table.Td>{x.name}</Table.Td>
+                                    <Table.Td bg={x.status === "online" ? "green" : "red"} c={"white"}>{x.status}</Table.Td>
+                                    <Table.Td>
+                                        <Flex gap={"md"}>
+                                            <ActionIcon>
+                                                <MdRestartAlt />
+                                            </ActionIcon>
+                                            <ActionIcon>
+                                                <MdStop />
+                                            </ActionIcon>
+                                            <ActionIcon>
+                                                <MdLogoDev />
+                                            </ActionIcon>
+                                        </Flex>
+                                    </Table.Td>
+                                </Table.Tr>
+                            ))
+                        }
+                    </Table.Tbody>
+                </Table>
                 <Loader visible={listPm2 === null} />
             </Stack>
 
