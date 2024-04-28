@@ -16,7 +16,12 @@ module.exports = async function (req, res) {
             data.name = l.split("_")[0]
             data.port = Number(l.split("_")[1])
             try {
-                data.host = await fs.promises.readFile(`/etc/nginx/sites-enabled/${l}`, "utf-8")
+
+                const host = await fs.promises.readFile(`/etc/nginx/sites-enabled/${l}`, "utf-8")
+                const regex = /server_name\s+([^;]+);/g;
+                const matches = [...host.matchAll(regex)];
+                const serverNames = matches.map(match => match[1].trim());
+                data.server_name = serverNames
             } catch (error) {
                 console.log(error)
             }
