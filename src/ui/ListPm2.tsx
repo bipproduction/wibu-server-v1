@@ -23,7 +23,7 @@ export function ListPm2() {
 
                 <Box p={"md"}>
                     <Skeleton visible={listPm2 === null}  h={200}>
-                        <Flex wrap={"wrap"}>
+                        <Flex wrap={"wrap"} gap={"md"}>
                             {listPm2?.map((x, i) => (
                                 <Paper shadow="sm" key={i} p={"md"} bg={x.status === "online" ? "green" : "red"} c={"white"}>
                                     <Stack key={i} gap={0}>
