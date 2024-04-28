@@ -42,11 +42,11 @@ export function ListServer() {
                 </Table.Tbody>
             </Table>
 
-            <Stack pos={"relative"}>
+            {/* <Stack pos={"relative"}>
                 <Skeleton visible={listServer === null} >
                     <pre>{JSON.stringify(listServer, null, 2)}</pre>
                 </Skeleton>
-            </Stack>
+            </Stack> */}
         </Stack>
     );
 }
