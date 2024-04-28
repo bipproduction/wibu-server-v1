@@ -8,7 +8,9 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 app.prepare().then(async () => {
+    if (!argv.port) return console.log('no port');
     const server = express();
+
 
     bin_api(server);
 
@@ -18,7 +20,7 @@ app.prepare().then(async () => {
     });
 
     // Start Express server
-    const PORT = process.env.PORT || 3005;
+    const PORT = argv.port;
     server.listen(PORT, () => {
         console.log(`Server is listening on port ${PORT}`);
     });
