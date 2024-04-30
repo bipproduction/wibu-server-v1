@@ -69,11 +69,12 @@ export function ListPm2() {
 
     return (
         <Stack p={"md"}>
-            <Title>ListPm2</Title>
+            <Title>List App</Title>
             <Stack pos={"relative"}>
                 <Table striped withColumnBorders withRowBorders withTableBorder>
                     <Table.Thead>
                         <Table.Tr>
+                            <Table.Th>#</Table.Th>
                             <Table.Th>ID</Table.Th>
                             <Table.Th>NAME</Table.Th>
                             <Table.Th>PORT</Table.Th>
@@ -85,6 +86,7 @@ export function ListPm2() {
                         {
                             listPm2?.map((x, i) => (
                                 <Table.Tr key={i} >
+                                    <Table.Td>{i + 1}</Table.Td>
                                     <Table.Td>{x.id}</Table.Td>
                                     <Table.Td>{x.name}</Table.Td>
                                     <Table.Td>{x.port}</Table.Td>
@@ -120,7 +122,7 @@ export function ListPm2() {
                 </Table>
                 <Skeleton visible={listPm2 === null} h={"md"} ></Skeleton>
             </Stack>
-
+                
         </Stack>
     );
 }

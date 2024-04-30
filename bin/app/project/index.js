@@ -11,17 +11,22 @@ module.exports = async function (req, res) {
         try {
             const name = l
             const type = JSON.parse(await fs.promises.readFile(path.join(root_path, "../", l, "package.json"), "utf-8")).dependencies.express ? "express" : "nextjs"
-            // console.log(name, type)
+            const prisma = (await fs.promises.readdir(path.join(root_path, "../", l, "prisma"), "utf-8")).length > 0
+            const script = JSON.parse((await fs.promises.readFile(path.join(root_path, "../", l, "package.json"), "utf-8"))).scripts
+
             const data = {
                 name,
-                type
+                type,
+                studio: prisma,
+                script
             }
 
             list_data.push(data)
         } catch (error) {
             const data = {
                 name: l,
-                type: null
+                type: null,
+                studio: null
             }
 
             list_data.push(data)

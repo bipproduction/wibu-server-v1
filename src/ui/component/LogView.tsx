@@ -1,4 +1,5 @@
-import { ActionIcon, Code, Flex, Paper, Stack, Text } from "@mantine/core"
+import { ActionIcon, Box, Code, Flex, Paper, Stack, Text } from "@mantine/core"
+import { LegacyRef } from "react"
 import { MdClose } from "react-icons/md"
 
 const LogView = ({ text, setOpen }: { text: string, setOpen: any }) => {

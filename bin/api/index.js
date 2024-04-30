@@ -5,6 +5,9 @@ const list_server = require('../app/server')
 const pm2_restart = require('../app/pm2/pm2_restart')
 const pm2_stop = require('../app/pm2/pm2_stop')
 const pm2_log = require('../app/pm2/pm2_log')
+const pm2_delete = require('../app/pm2/pm2_delete')
+const project_build = require('../app/project/project_build')
+const project_pull = require('../app/project/project_pull')
 
 /**
  * 
@@ -19,10 +22,14 @@ module.exports = async function (app) {
     app.get('/bin/pm2-stop', pm2_stop)
     // log pm2
     app.get('/bin/pm2-log', pm2_log)
+    // delete pm2
+    app.get('/bin/pm2-delete', pm2_delete)
 
 
     // get list project
     app.get('/bin/list-project', list_project)
+    app.get('/bin/project-build', project_build)
+    app.get('/bin/project-pull', project_pull)
 
     // get list server
     app.get('/bin/list-server', list_server)
