@@ -10,15 +10,34 @@ module.exports = async function (req, res) {
     for (let l of list) {
         try {
             const name = l
-            const type = JSON.parse(await fs.promises.readFile(path.join(root_path, "../", l, "package.json"), "utf-8")).dependencies.express ? "express" : "nextjs"
-            const prisma = (await fs.promises.readdir(path.join(root_path, "../", l, "prisma"), "utf-8")).length > 0
-            const script = JSON.parse((await fs.promises.readFile(path.join(root_path, "../", l, "package.json"), "utf-8"))).scripts
+            const type = async () => {
+                try {
+                    return JSON.parse(await fs.promises.readFile(path.join(root_path, "../", l, "package.json"), "utf-8")).dependencies.express ? "express" : "nextjs"
+                } catch (error) {
+                    return null
+                }
+            }
+            const script = async () => {
+                try {
+                    return JSON.parse((await fs.promises.readFile(path.join(root_path, "../", l, "package.json"), "utf-8"))).scripts
+                } catch (error) {
+                    return null
+                }
+            }
+
+            const prisma = async () => {
+                try {
+                    return (await fs.promises.readdir(path.join(root_path, "../", l, "prisma"), "utf-8")).length > 0
+                } catch (error) {
+                    return false
+                }
+            }
 
             const data = {
                 name,
-                type,
-                studio: prisma,
-                script
+                type: await type(),
+                studio: await prisma(),
+                script: await script()
             }
 
             list_data.push(data)
@@ -30,7 +49,7 @@ module.exports = async function (req, res) {
             }
 
             list_data.push(data)
-            // console.log(error)
+            console.log(error)
         }
 
     }

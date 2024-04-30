@@ -131,6 +131,7 @@ export function ListProject() {
                             <Table.Th>TYPE</Table.Th>
                             <Table.Th>STUDIO</Table.Th>
                             <Table.Th>ACTION</Table.Th>
+                            {/* <Table.Th>VIEW</Table.Th> */}
                         </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>
@@ -165,6 +166,9 @@ export function ListProject() {
                                             </Tooltip>
                                         </ActionIcon.Group>
                                     </Table.Td>
+                                    {/* <Table.Td>
+                                        {JSON.stringify(x.script)}
+                                    </Table.Td> */}
                                 </Table.Tr>
 
                             ))
