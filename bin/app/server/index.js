@@ -18,11 +18,13 @@ module.exports = async function (req, res) {
             data.port = Number(l.split("_")[1])
             try {
 
-                const host = await fs.promises.readFile(`/etc/nginx/sites-enabled/${l}`, "utf-8")
+                const text = await fs.promises.readFile(`/etc/nginx/sites-enabled/${l}`, "utf-8")
                 const regex = /server_name\s+([^;]+);/g;
-                const matches = [...host.matchAll(regex)];
+                const matches = [...text.matchAll(regex)];
                 const serverNames = matches.map(match => match[1].trim())[0];
                 data.server_name = serverNames
+                data.text = text
+                data.is_ssl = text.includes("listen 443 ssl")
             } catch (error) {
                 console.log(error)
             }

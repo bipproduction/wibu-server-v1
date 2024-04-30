@@ -5,18 +5,23 @@ import { useScrollIntoView, useShallowEffect } from "@mantine/hooks";
 import { useState } from "react";
 import { Loader } from "./component/Loader";
 import LogView from "./component/LogView";
-import { MdAdd, MdBuild, MdDelete, MdDownload, MdInstallDesktop, MdRunningWithErrors } from "react-icons/md";
+import { MdAdd, MdBuild, MdDelete, MdDownload, MdInstallDesktop, MdRunningWithErrors, MdStart } from "react-icons/md";
 import { ActionModal } from "./component/ActionModal";
+import { ActionModalStart } from "./component/ActionModalStart";
+import { showNotification } from '@mantine/notifications'
+import mqttGlobal from "@/util/mqtt"
 
 export function ListProject() {
     const [listProject, setlistProject] = useState<any[] | null>(null)
     const [openLog, setOpenLog] = useState(false)
     const [textLog, setTextLog] = useState<string>("")
     const [loading, setLoading] = useState(false)
-    const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
-        offset: 60,
-    });
-    const [openModal, setOprnModal] = useState(false)
+    const [openModal, setOpenModal] = useState({
+        open: false,
+        name: "",
+        type: "",
+        port: ""
+    })
 
     useShallowEffect(() => {
         loadList()
@@ -68,7 +73,7 @@ export function ListProject() {
         setTextLog("loading ...")
         setOpenLog(true)
         setLoading(true)
-        const res = await fetch(`/bin/project-install?name=${name}`).then(res => res.json())
+        const res: any = await fetch(`/bin/project-install?name=${name}`)
         const reader = res.body.getReader()
         let result = ""
         while (true) {
@@ -77,12 +82,33 @@ export function ListProject() {
             result += new TextDecoder("utf-8").decode(value)
             setTextLog(result)
         }
-        loadList()
+        // loadList()
         setLoading(false)
     }
 
-    const onDelete = async (id: string) => {
+    const onStart = async (val: any) => {
+        const res: any[] = await fetch('/bin/list-pm2').then(res => res.json())
+        const ada = res.find(x => +x.port === +val.port)
 
+        if (ada) return alert("port already in use")
+        const cmd = `pm2 start "yarn start --port ${val.port}" --name ${val.name}_${val.port}`
+        setOpenModal({ ...openModal, open: false })
+
+
+        setTextLog("loading ...")
+        setOpenLog(true)
+        setLoading(true)
+        const res2: any = await fetch('/bin/pm2-start?cmd=' + cmd + '&name=' + val.name)
+        const reader = res2.body.getReader()
+        let result = ""
+        while (true) {
+            const { done, value } = await reader.read()
+            if (done) break
+            result += new TextDecoder("utf-8").decode(value)
+            setTextLog(result)
+        }
+        setLoading(false)
+        mqttGlobal.publish('pm2', 'pm2')
     }
 
     if (openLog) {
@@ -132,6 +158,11 @@ export function ListProject() {
                                                     <MdBuild onClick={() => onBuild(x.name)} />
                                                 </ActionIcon>
                                             </Tooltip>}
+                                            <Tooltip label="start">
+                                                <ActionIcon onClick={() => setOpenModal({ ...openModal, open: true, name: x.name, type: x.type })}>
+                                                    <MdStart />
+                                                </ActionIcon>
+                                            </Tooltip>
                                         </ActionIcon.Group>
                                     </Table.Td>
                                 </Table.Tr>
@@ -140,12 +171,9 @@ export function ListProject() {
                         }
                     </Table.Tbody>
                 </Table>
-                <Skeleton visible={listProject === null} h={"md"} ></Skeleton>
+                {listProject === null && <Skeleton h={300} bg={"cyan"}></Skeleton>}
             </Stack>
-            <ActionModal openModal={openModal} onClose={() => setOprnModal(false)} text={"Add Project"} onSubmit={() => {
-                setOprnModal(false)
-                console.log("add")
-            }} />
+            <ActionModalStart openModal={openModal} setOpenModal={setOpenModal} onSubmit={onStart} />
         </Stack>
     );
 }

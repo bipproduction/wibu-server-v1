@@ -7,8 +7,9 @@ import { MdClose, MdDelete, MdLogoDev, MdRemove, MdRestartAlt, MdStop } from 're
 import _ from "lodash";
 import { Loader } from "./component/Loader";
 import LogView from "./component/LogView";
+import mqttGlobal from "@/util/mqtt"
 
-export function ListPm2() {
+export function ListApp() {
     const [listPm2, setlistPm2] = useState<any[] | null>(null)
     const [openLog, setOpenLog] = useState(false)
     const [textLog, setTextLog] = useState<string>("")
@@ -16,6 +17,12 @@ export function ListPm2() {
 
     useShallowEffect(() => {
         loadList()
+        mqttGlobal.subscribe('pm2')
+        mqttGlobal.on('message', (topic, message) => {
+            if (topic === 'pm2') {
+                loadList()
+            }
+        })
     }, [])
     const loadList = async () => {
         const list = await fetch('/bin/list-pm2').then(res => res.json())
@@ -98,11 +105,11 @@ export function ListPm2() {
                                                     <MdRestartAlt />
                                                 </ActionIcon>
                                             </Tooltip>
-                                            {x.status === "online" && <Tooltip label="Stop">
+                                            <Tooltip label="Stop">
                                                 <ActionIcon loading={loading} onClick={() => onStop(x.id)}>
                                                     <MdStop />
                                                 </ActionIcon>
-                                            </Tooltip>}
+                                            </Tooltip>
                                             {x.status === "stopped" && <Tooltip label="Delete">
                                                 <ActionIcon loading={loading} onClick={() => onDelete(x.id)}>
                                                     <MdDelete />
@@ -120,9 +127,9 @@ export function ListPm2() {
                         }
                     </Table.Tbody>
                 </Table>
-                <Skeleton visible={listPm2 === null} h={"md"} ></Skeleton>
+
             </Stack>
-                
+            {listPm2 === null && <Skeleton h={300} ></Skeleton>}
         </Stack>
     );
 }

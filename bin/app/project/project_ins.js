@@ -23,6 +23,13 @@ module.exports = async function (req, res) {
             cwd: path.join(process.cwd(), "../", name)
         })
 
+        child.stdout.on('data', (data) => {
+            console.log(data.toString())
+        })
+
+        child.stderr.on('data', (data) => {
+            console.log(data.toString())
+        })
 
         child.stdout.pipe(res)
         child.stderr.pipe(res)
