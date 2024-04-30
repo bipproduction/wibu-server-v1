@@ -1,34 +1,31 @@
 const { spawn } = require('child_process')
 const path = require('path')
-require('colors')
 module.exports = async function (req, res) {
-    /**
-       * @type {string}
-       */
     const name = req.query.name
-
     if (!name) {
-        return res.json({
-            success: false,
-            message: "name is required"
-        })
+        const child = spawn('echo', ['name is required'])
+        child.stdout.pipe(res)
+        child.stderr.pipe(res)
     }
 
     if (name.includes("wibu-server")) {
-        const child = spawn('yarn', ['build'], {
+
+        const child = spawn('yarn', ['install'], {
             cwd: path.join(process.cwd(), "./")
         })
 
         child.stdout.pipe(res)
         child.stderr.pipe(res)
     } else {
-        console.log(name.green)
-        const child = spawn('yarn', ['build'], {
+        console.log(name.green, "installing ...")
+
+        const child = spawn('yarn', ['install'], {
             cwd: path.join(process.cwd(), "../", name)
         })
 
+
         child.stdout.pipe(res)
         child.stderr.pipe(res)
-
     }
+
 }

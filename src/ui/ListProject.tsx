@@ -26,10 +26,12 @@ export function ListProject() {
         setlistProject(res)
     }
 
-    const onBuild = async (id: string) => {
+    const onPull = async (id: string) => {
+
+        setTextLog("loading ...")
         setOpenLog(true)
         setLoading(true)
-        const res: any = await fetch(`/bin/nextjs-build?id=${id}`)
+        const res: any = await fetch(`/bin/project-pull?name=${id}`)
         if (!res.ok) return setLoading(false)
         const reader = res.body.getReader()
         let result = ""
@@ -40,17 +42,41 @@ export function ListProject() {
             setTextLog(result)
             // scrollIntoView({ alignment: 'start' })
         }
+        setLoading(false)
 
-        loadList()
+    }
+
+    const onBuild = async (id: string) => {
+        setTextLog("loading ...")
+        setOpenLog(true)
+        setLoading(true)
+        const res: any = await fetch(`/bin/project-build?name=${id}`)
+        if (!res.ok) return setLoading(false)
+        const reader = res.body.getReader()
+        let result = ""
+        while (true) {
+            const { done, value } = await reader.read()
+            if (done) break
+            result += new TextDecoder("utf-8").decode(value)
+            setTextLog(result)
+            // scrollIntoView({ alignment: 'start' })
+        }
         setLoading(false)
     }
 
-    const onInstall = async (id: string) => {
-
+    const onInstall = async (name: string) => {
+        setTextLog("loading ...")
         setOpenLog(true)
         setLoading(true)
-        // const res = await fetch(`/bin/nextjs-install?id=${id}`).then(res => res.json())
-        // console.log(res)
+        const res = await fetch(`/bin/project-install?name=${name}`).then(res => res.json())
+        const reader = res.body.getReader()
+        let result = ""
+        while (true) {
+            const { done, value } = await reader.read()
+            if (done) break
+            result += new TextDecoder("utf-8").decode(value)
+            setTextLog(result)
+        }
         loadList()
         setLoading(false)
     }
@@ -60,7 +86,7 @@ export function ListProject() {
     }
 
     if (openLog) {
-        return <LogView text={textLog} setOpen={setOpenLog} />
+        return <LogView loading={loading} text={textLog} setOpen={setOpenLog} />
     }
     return (
         <Stack p={"md"} gap={"md"}>
@@ -71,7 +97,7 @@ export function ListProject() {
                 </ActionIcon>
             </ActionIcon.Group>
             <Stack pos={"relative"}>
-                <Table striped withColumnBorders withRowBorders withTableBorder>
+                <Table striped withColumnBorders withRowBorders withTableBorder highlightOnHover>
                     <Table.Thead>
                         <Table.Tr>
                             <Table.Th>#</Table.Th>
@@ -92,41 +118,20 @@ export function ListProject() {
                                     <Table.Td>
                                         <ActionIcon.Group >
                                             <Tooltip label="pull">
-                                                <ActionIcon>
+                                                <ActionIcon onClick={() => onPull(x.name)}>
                                                     <MdDownload />
                                                 </ActionIcon>
                                             </Tooltip>
                                             <Tooltip label="install">
                                                 <ActionIcon>
-                                                    <MdInstallDesktop onClick={() => onInstall(x.id)} />
+                                                    <MdInstallDesktop onClick={() => onInstall(x.name)} />
                                                 </ActionIcon>
                                             </Tooltip>
                                             {x.script && x.script.build && <Tooltip label="Build">
                                                 <ActionIcon>
-                                                    <MdBuild onClick={() => onBuild(x.id)} />
+                                                    <MdBuild onClick={() => onBuild(x.name)} />
                                                 </ActionIcon>
                                             </Tooltip>}
-                                            {/* {x.type === "nextjs" ?
-                                                <Tooltip label="Build">
-                                                    <ActionIcon bg={"green"} onClick={() => onBuild(x.id)} >
-                                                        <MdBuild />
-                                                    </ActionIcon>
-                                                </Tooltip>
-                                                : x.type === null ? null : <Tooltip label="Install">
-                                                    <ActionIcon onClick={() => onInstall(x.id)} >
-                                                        <MdInstallDesktop />
-                                                    </ActionIcon>
-                                                </Tooltip>}
-                                            <Tooltip label="Delete">
-                                                <ActionIcon color={"red"} onClick={() => setOprnModal(true)}  >
-                                                    <MdDelete />
-                                                </ActionIcon>
-                                            </Tooltip>
-                                            {x.type && <Tooltip label={"run"}>
-                                                <ActionIcon color={"yellow"} >
-                                                    <MdRunningWithErrors />
-                                                </ActionIcon>
-                                            </Tooltip>} */}
                                         </ActionIcon.Group>
                                     </Table.Td>
                                 </Table.Tr>

@@ -65,7 +65,7 @@ export function ListPm2() {
 
     }
 
-    if (openLog) return <LogView text={textLog} setOpen={setOpenLog} />
+    if (openLog) return <LogView loading={loading} text={textLog} setOpen={setOpenLog} />
 
     return (
         <Stack p={"md"}>

@@ -8,6 +8,7 @@ const pm2_log = require('../app/pm2/pm2_log')
 const pm2_delete = require('../app/pm2/pm2_delete')
 const project_build = require('../app/project/project_build')
 const project_pull = require('../app/project/project_pull')
+const project_install = require('../app/project/project_install')
 
 /**
  * 
@@ -30,6 +31,7 @@ module.exports = async function (app) {
     app.get('/bin/list-project', list_project)
     app.get('/bin/project-build', project_build)
     app.get('/bin/project-pull', project_pull)
+    app.get('/bin/project-install', project_install)
 
     // get list server
     app.get('/bin/list-server', list_server)
