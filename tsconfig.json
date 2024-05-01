@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "bin/api.ts", "server.js", "bin/src/list_pm2.js", "bin/app/project/project_install.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "bin/api.ts", "server.js", "bin/src/list_pm2.js", "bin/app/project/project_install.js", "src/app/api/auth/user/route.ts"],
   "exclude": ["node_modules"]
 }
